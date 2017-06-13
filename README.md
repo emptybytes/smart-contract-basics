@@ -1,1 +1,1 @@
-# smart-contract-basics
+# Smart contract tree
