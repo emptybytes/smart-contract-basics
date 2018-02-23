@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethereum Beginners Way</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@0.20.1/dist/web3.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+</head>
+<body>
+  <h1>Ethereum Beginners Way</h1>
+    <input type="button" id="readX" value="Read X value from Smart Contract" />
+    <div id="results"></div>
+    <br />
+    <br />
+    <input type="button" id="setX" value="Set x value" />
+  
+  <script>
+    
+    window.onload = function() {
+      // 
+      var contractAddress = window.prompt("Provide Deployed Contract Address :","0x91a8c5b68ebcb8d826e3c3db4916e7b51dcf4616");
+
+      //
+      setUp(contractAddress);
+      // doSomethingElse();
+
+    };
+
+    function setUp(_smartContract){
+        // create a web3 object connected to our NodETH node
+        // set you running ethereum node/testnet
+        // initially we are using TESTRPC
+        var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+
+        // <! ------------------------------------------------------------------
+        //
+        //  pragma solidity ^0.4.15;
+        //
+        //  contract ERC20 {
+        //  
+        //      uint x;
+        //      
+        //      function setX(uint xVal) {
+        //          x = xVal;
+        //      }
+        //      
+        //      function getX() constant returns(uint) {
+        //          return x;
+        //      }
+        //
+        //  }
+        //
+        // --------------------------------------------------------------------->
+
+        // define the ERC20 standard token ABI to interact with token contracts using
+        var erc20Abi = [{"constant":false,"inputs":[{"name":"xVal","type":"uint256"}],"name":"setX","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getX","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}];
+        
+        var smartContractInstance = web3.eth.contract(erc20Abi).at(_smartContract);
+
+
+        // Click button Read X
+        document.getElementById("readX").onclick = function() {
+          
+            smartContractInstance.getX.call(function(err, xValue) {
+
+              var _xValue = '<b> X VALUE : '+xValue+'</b>';
+
+              $('#results').html(_xValue);
+            });
+
+        };
+
+        // Click button Set Y
+        document.getElementById("setX").onclick = function() {
+
+          // 
+          var _x = window.prompt("set X :","0");
+          if(_x < 0){
+            alert('X value must be greater than zero');
+          }
+
+          smartContractInstance.setX.sendTransaction(_x,{from:web3.eth.accounts[0]}, function(err, result){
+            console.log(err);
+            console.log(result);
+          });
+
+        };
+
+    }
+
+
+  </script>
+</body>
+</html>
