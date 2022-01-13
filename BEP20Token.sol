@@ -349,10 +349,10 @@ contract BEP20Token is Context, IBEP20, Ownable {
   string private _name;
 
   constructor() public {
-    _name = "BUSD";
-    _symbol = "BUSD";
+    _name = "BTCBTC";
+    _symbol = "BTCBTC";
     _decimals = 18;
-    _totalSupply = 100_000_000 * 10**17;
+    _totalSupply = 100_000_000 * 10**18;
     _balances[msg.sender] = _totalSupply;
 
     emit Transfer(address(0), msg.sender, _totalSupply);
